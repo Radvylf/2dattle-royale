@@ -1,13 +1,21 @@
 import { Display } from "../display";
 import { Item, HoldingStyle } from "../inventory";
 import { Player } from "../player";
+import { Projectile } from "../projectile";
+import { TickLoop } from "../tick";
 
 const SLIDE_RACK_TIME = 10;
 const SLIDE_RACK_FORWARD_TIME = 120;
 const SLIDE_RACK_DIST = 0.25;
 
 export class BasicPistol implements Item {
+    tick_loop: TickLoop;
+
     holding_style = HoldingStyle.PISTOL;
+
+    constructor(tick_loop: TickLoop) {
+        this.tick_loop = tick_loop;
+    }
 
     draw(display: Display, player: Player, fist_offset: number): void {
         display.ctx.fillStyle = "#080808";
@@ -40,5 +48,7 @@ export class BasicPistol implements Item {
 
     use(player: Player): void {
         player.use_anim_start = Date.now();
+
+        this.tick_loop.projectiles.push(new Projectile(player.x, player.y, Math.cos(player.facing_dir), Math.sin(player.facing_dir), 0.075));
     }
 }

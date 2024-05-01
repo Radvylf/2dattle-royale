@@ -27,7 +27,7 @@ const display = new Display(canvas! as HTMLCanvasElement, dims, player, tick_loo
 
 tick_loop.attatch_player(player);
 
-player.holding_item = new BasicPistol();
+player.holding_item = new BasicPistol(tick_loop);
 
 tick_loop.objects.insert_object(new Crate(-2, -4));
 tick_loop.objects.insert_object(new Crate(-4.5, -3));
@@ -56,7 +56,7 @@ function frame(tick_time: number | null) {
     // if (tick_diff_ms > 16.85) console.log(tick_diff_ms);
 
     display.draw();
-    player.tick(tick_diff_ms);
+    tick_loop.tick(tick_diff_ms);
 
     window.requestAnimationFrame(frame);
 }

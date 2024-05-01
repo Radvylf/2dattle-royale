@@ -1,6 +1,7 @@
 import { Player } from "./player";
 import { HoldingStyle } from "./inventory";
 import { TickLoop } from "./tick";
+import { Projectile } from "./projectile";
 import { Controls } from "./controls";
 import EventEmitter from "eventemitter3";
 
@@ -67,6 +68,20 @@ export class Display {
 
     shift_polar(x: number, y: number, dir: number, dist: number): [number, number] {
         return [x + Math.cos(dir) * dist, y + Math.sin(dir) * dist]
+    }
+
+    draw_projectile(proj: Projectile) {
+        this.ctx.fillStyle = "#000000";
+
+        const dir = Math.atan2(proj.dy, proj.dx);
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI / 4, proj.size * Math.SQRT1_2)));
+        this.ctx.lineTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI * 3 / 4, proj.size * Math.SQRT1_2)));
+        this.ctx.lineTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI * 5 / 4, proj.size * Math.SQRT1_2)));
+        this.ctx.lineTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI * 7 / 4, proj.size * Math.SQRT1_2)));
+        this.ctx.closePath();
+        this.ctx.fill();
     }
 
     draw_player(player: Player) {
@@ -197,6 +212,10 @@ export class Display {
             if (object.has_upper_layer) {
                 upper_layer_objects.push(object);
             }
+        }
+
+        for (const proj of this.tick_loop.projectiles) {
+            this.draw_projectile(proj);
         }
         
         for (const [_, player] of Array.from(this.tick_loop.players)) {

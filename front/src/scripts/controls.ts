@@ -31,6 +31,11 @@ const bindings: Binding[] = [
         id: "use",
         keys: new Set(["Space"]),
         mouse_btns: new Set([0])
+    },
+    {
+        id: "crouch",
+        keys: new Set(["ShiftLeft", "ShiftRight"]),
+        mouse_btns: new Set([])
     }
 ];
 

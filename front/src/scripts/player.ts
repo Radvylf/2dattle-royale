@@ -14,6 +14,8 @@ export class Player {
     dy: number;
     facing_dir: number;
 
+    crouching: boolean;
+
     holding_item: Item | null;
     active_hand: number;
     use_anim_start: number | null;
@@ -24,6 +26,8 @@ export class Player {
         this.dx = 0;
         this.dy = 0;
         this.facing_dir = facing_dir;
+
+        this.crouching = false;
 
         this.holding_item = null; // todo
         this.active_hand = 0; // todo
@@ -83,8 +87,8 @@ export class FpPlayer extends Player {
         this.dx += Math.cos(dd_dir) * Math.min(dd_dist, tick_diff_ms / 1000 * DSPD);
         this.dy += Math.sin(dd_dir) * Math.min(dd_dist, tick_diff_ms / 1000 * DSPD);
 
-        const tick_mov_x = this.dx * tick_diff_ms / 1000 * SPD;
-        const tick_mov_y = this.dy * tick_diff_ms / 1000 * SPD;
+        const tick_mov_x = this.dx * tick_diff_ms / 1000 * SPD * (this.crouching ? 1 / 2 : 1);
+        const tick_mov_y = this.dy * tick_diff_ms / 1000 * SPD * (this.crouching ? 1 / 2 : 1);
 
         if (tick_mov_x != 0 || tick_mov_y != 0) {
             const collision_possible = this.tick_loop.objects.collision_possible(this.x, this.y, 1 / 2, tick_mov_x, tick_mov_y);
@@ -131,6 +135,8 @@ export class FpPlayer extends Player {
                 this.y += Math.sin(tick_mov_dir) * min_collision.dist + Math.sin(min_collision.dfc_dir) * dfc_dist;
             }
         }
+
+        this.crouching = this.controls.is_bind_down("crouch");
     }
 
     use() {

@@ -53,6 +53,9 @@ export class Player {
 export class FpPlayer extends Player {
     id: number;
 
+    cooldown: number;
+    burst_count: number;
+
     dims: Dims;
     tick_loop: TickLoop;
     controls: Controls;
@@ -61,6 +64,9 @@ export class FpPlayer extends Player {
         super(x, y, controls.mouse_offset ? Math.atan2(controls.mouse_offset[1] - dims.y, controls.mouse_offset[0] - dims.x) : 0);
 
         this.id = id;
+
+        this.cooldown = 0;
+        this.burst_count = 0;
 
         this.dims = dims;
         this.tick_loop = tick_loop;
@@ -72,6 +78,12 @@ export class FpPlayer extends Player {
         controls.on("bind_down", (bind) => {
             if (bind == "use") {
                 this.use();
+            }
+        });
+
+        controls.on("bind_up", (bind) => {
+            if (bind == "use") {
+                this.burst_count = 0;
             }
         });
 

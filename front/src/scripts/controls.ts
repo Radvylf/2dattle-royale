@@ -61,6 +61,11 @@ export class Controls extends EventEmitter {
                             continue bindings;
                         }
                     }
+                    for (const mouse_btn of Array.from(binding.mouse_btns)) {
+                        if (this.mouse_btns_down.has(mouse_btn)) {
+                            continue bindings;
+                        }
+                    }
 
                     binds_now_down.push(binding.id);
                 }
@@ -68,31 +73,74 @@ export class Controls extends EventEmitter {
 
             this.keys_down.add(event.code);
 
-            for (const binding of binds_now_down) this.emit("bind_down", binding);
+            for (const binding_id of binds_now_down) this.emit("bind_down", binding_id);
         });
 
         window.addEventListener("keyup", (event) => {
             this.keys_down.delete(event.code);
-        });
-
-        window.addEventListener("mousedown", (event) => {
-            this.mouse_btns_down.add(event.button);
 
             bindings: for (const binding of bindings) {
-                if (binding.mouse_btns.has(event.button)) {
+                if (binding.keys.has(event.code)) {
+                    for (const key of Array.from(binding.keys)) {
+                        if (this.keys_down.has(key)) {
+                            continue bindings;
+                        }
+                    }
                     for (const mouse_btn of Array.from(binding.mouse_btns)) {
-                        if (mouse_btn != event.button && this.mouse_btns_down.has(mouse_btn)) {
+                        if (this.mouse_btns_down.has(mouse_btn)) {
                             continue bindings;
                         }
                     }
 
-                    this.emit("bind_down", binding.id);
+                    this.emit("bind_up", binding.id);
                 }
             }
         });
 
+        window.addEventListener("mousedown", (event) => {
+            let binds_now_down = [];
+
+            bindings: for (const binding of bindings) {
+                if (binding.mouse_btns.has(event.button)) {
+                    for (const key of Array.from(binding.keys)) {
+                        if (this.keys_down.has(key)) {
+                            continue bindings;
+                        }
+                    }
+                    for (const mouse_btn of Array.from(binding.mouse_btns)) {
+                        if (this.mouse_btns_down.has(mouse_btn)) {
+                            continue bindings;
+                        }
+                    }
+
+                    binds_now_down.push(binding.id);
+                }
+            }
+
+            this.mouse_btns_down.add(event.button);
+
+            for (const binding_id of binds_now_down) this.emit("bind_down", binding_id);
+        });
+
         window.addEventListener("mouseup", (event) => {
             this.mouse_btns_down.delete(event.button);
+
+            bindings: for (const binding of bindings) {
+                if (binding.mouse_btns.has(event.button)) {
+                    for (const key of Array.from(binding.keys)) {
+                        if (this.keys_down.has(key)) {
+                            continue bindings;
+                        }
+                    }
+                    for (const mouse_btn of Array.from(binding.mouse_btns)) {
+                        if (this.mouse_btns_down.has(mouse_btn)) {
+                            continue bindings;
+                        }
+                    }
+
+                    this.emit("bind_up", binding.id);
+                }
+            }
         });
 
         window.addEventListener("mousemove", (event) => {

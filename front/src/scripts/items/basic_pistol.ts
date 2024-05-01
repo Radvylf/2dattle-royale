@@ -1,6 +1,6 @@
 import { Display } from "../display";
 import { Item, HoldingStyle } from "../inventory";
-import { Player, SPD } from "../player";
+import { Player, FpPlayer, SPD } from "../player";
 import { Projectile } from "../projectile";
 import { TickLoop } from "../tick";
 
@@ -46,7 +46,7 @@ export class BasicPistol implements Item {
         display.ctx.stroke();
     }
 
-    use(player: Player): void {
+    use(player: FpPlayer): void {
         player.use_anim_start = Date.now();
 
         const cos = Math.cos(player.facing_dir);
@@ -54,6 +54,6 @@ export class BasicPistol implements Item {
 
         const proj_dist = 0.615 + player.fist_offset();
 
-        this.tick_loop.projectiles.push(new Projectile(player.x + cos * proj_dist, player.y + sin * proj_dist, player.dx * SPD + cos * 40, player.dy * SPD + sin * 40, 0.075));
+        this.tick_loop.projectiles.push(new Projectile(player.x + cos * proj_dist, player.y + sin * proj_dist, player.dx * SPD + cos * 40, player.dy * SPD + sin * 40, 0.075, 0));
     }
 }

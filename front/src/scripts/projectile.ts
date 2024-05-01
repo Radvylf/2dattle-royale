@@ -5,12 +5,16 @@ export class Projectile {
     dy: number;
     size: number;
 
-    constructor(x: number, y: number, dx: number, dy: number, size: number) {
+    damage: number;
+
+    constructor(x: number, y: number, dx: number, dy: number, size: number, damage: number) {
         this.x = x;
         this.y = y;
         this.dx = dx;
         this.dy = dy;
         this.size = size;
+
+        this.damage = damage;
     }
 
     tick(tick_diff_ms: number) {

@@ -134,8 +134,18 @@ export class FpPlayer extends Player {
     }
 
     use() {
+        if (this.holding_item == null) {
+            this.punch();
+        } else {
+            this.holding_item.use(this);
+        }
+    }
+
+    punch() {
         this.active_hand = 1 - this.active_hand;
         this.use_anim_start = Date.now();
+
+        // todo: damage
     }
 
     send_position_update() {

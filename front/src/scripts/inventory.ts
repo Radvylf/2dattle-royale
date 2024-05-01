@@ -8,5 +8,7 @@ export enum HoldingStyle {
 export interface Item {
     holding_style: HoldingStyle;
 
-    draw(display: Display, player: Player): void;
+    draw(display: Display, player: Player, fist_offset: number): void;
+
+    use(player: Player): void;
 }

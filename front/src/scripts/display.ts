@@ -102,7 +102,7 @@ export class Display {
 
         const RECOIL_TIME = 20;
         const RECOIL_FORWARD_TIME = 140;
-        const RECOIL_DIST = 0.0875;
+        const RECOIL_DIST = 0.1;
 
         if (player.holding_item == null) {
             const fist_offset = player.use_anim_start == null || Date.now() - player.use_anim_start >= PUNCH_TIME + PUNCH_PULLBACK_TIME ? 0 : (

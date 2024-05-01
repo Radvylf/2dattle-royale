@@ -4,7 +4,7 @@ import { Player } from "../player";
 
 const SLIDE_RACK_TIME = 10;
 const SLIDE_RACK_FORWARD_TIME = 120;
-const SLIDE_RACK_DIST = 0.275;
+const SLIDE_RACK_DIST = 0.25;
 
 export class BasicPistol implements Item {
     holding_style = HoldingStyle.PISTOL;
@@ -13,10 +13,10 @@ export class BasicPistol implements Item {
         display.ctx.fillStyle = "#080808";
 
         display.ctx.beginPath();
-        display.ctx.moveTo(...display.px(...display.shift_polar(...display.shift_polar(player.x, player.y, player.facing_dir, 0.615 + fist_offset), player.facing_dir - Math.PI / 2, 0.0575)));
-        display.ctx.lineTo(...display.px(...display.shift_polar(...display.shift_polar(player.x, player.y, player.facing_dir, 0.615 + fist_offset), player.facing_dir + Math.PI / 2, 0.0575)));
-        display.ctx.lineTo(...display.px(...display.shift_polar(...display.shift_polar(...display.shift_polar(player.x, player.y, player.facing_dir, 0.615 + fist_offset), player.facing_dir + Math.PI / 2, 0.0575), player.facing_dir, 0.625)));
-        display.ctx.lineTo(...display.px(...display.shift_polar(...display.shift_polar(...display.shift_polar(player.x, player.y, player.facing_dir, 0.615 + fist_offset), player.facing_dir - Math.PI / 2, 0.0575), player.facing_dir, 0.625)));
+        display.ctx.moveTo(...display.px(...display.shift_polar(...display.shift_polar(player.x, player.y, player.facing_dir, 0.615 + fist_offset), player.facing_dir - Math.PI / 2, 0.06)));
+        display.ctx.lineTo(...display.px(...display.shift_polar(...display.shift_polar(player.x, player.y, player.facing_dir, 0.615 + fist_offset), player.facing_dir + Math.PI / 2, 0.06)));
+        display.ctx.lineTo(...display.px(...display.shift_polar(...display.shift_polar(...display.shift_polar(player.x, player.y, player.facing_dir, 0.615 + fist_offset), player.facing_dir + Math.PI / 2, 0.06), player.facing_dir, 0.625)));
+        display.ctx.lineTo(...display.px(...display.shift_polar(...display.shift_polar(...display.shift_polar(player.x, player.y, player.facing_dir, 0.615 + fist_offset), player.facing_dir - Math.PI / 2, 0.06), player.facing_dir, 0.625)));
         display.ctx.closePath();
         display.ctx.fill();
 

@@ -5,6 +5,8 @@ export class Projectile {
     dy: number;
     size: number;
 
+    trail_time: number;
+
     damage: number;
 
     constructor(x: number, y: number, dx: number, dy: number, size: number, damage: number) {
@@ -13,6 +15,8 @@ export class Projectile {
         this.dx = dx;
         this.dy = dy;
         this.size = size;
+
+        this.trail_time = Date.now();
 
         this.damage = damage;
     }

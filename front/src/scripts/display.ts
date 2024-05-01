@@ -81,7 +81,7 @@ export class Display {
     }
 
     draw_projectile(proj: Projectile) {
-        this.ctx.fillStyle = "#000000";
+        this.ctx.fillStyle = "#ffffff";
 
         const dir = Math.atan2(proj.dy, proj.dx);
 
@@ -92,6 +92,23 @@ export class Display {
         this.ctx.lineTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI * 7 / 4, proj.size * Math.SQRT1_2)));
         this.ctx.closePath();
         this.ctx.fill();
+
+        const BULLET_TRAIL_DURATION = 0.25;
+
+        const trail_mul = Math.min(BULLET_TRAIL_DURATION, (Date.now() - proj.trail_time) / 1000);
+
+        const gradient = this.ctx.createLinearGradient(...this.px(proj.x, proj.y), ...this.px(proj.x - proj.dx * BULLET_TRAIL_DURATION, proj.y - proj.dy * BULLET_TRAIL_DURATION));
+
+        gradient.addColorStop(0, "rgba(255, 255, 255, 0.5)");
+        gradient.addColorStop(1, "rgba(255, 255, 255, 0.0)");
+
+        this.ctx.strokeStyle = gradient;
+        this.ctx.lineWidth = proj.size * this.scale;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(...this.px(proj.x, proj.y));
+        this.ctx.lineTo(...this.px(proj.x - proj.dx * trail_mul, proj.y - proj.dy * trail_mul));
+        this.ctx.stroke();
     }
 
     draw_player(player: Player) {

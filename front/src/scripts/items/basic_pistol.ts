@@ -1,4 +1,5 @@
 import { Display } from "../display";
+import { GunItem } from "../gun";
 import { Item, HoldingStyle } from "../inventory";
 import { Player, FpPlayer, SPD } from "../player";
 import { Projectile } from "../projectile";
@@ -8,13 +9,25 @@ const SLIDE_RACK_TIME = 10;
 const SLIDE_RACK_FORWARD_TIME = 120;
 const SLIDE_RACK_DIST = 0.25;
 
-export class BasicPistol implements Item {
-    tick_loop: TickLoop;
-
-    holding_style = HoldingStyle.PISTOL;
-
+export class BasicPistol extends GunItem {
     constructor(tick_loop: TickLoop) {
-        this.tick_loop = tick_loop;
+        super(tick_loop, {
+            holding_style: HoldingStyle.PISTOL,
+    
+            damage: 0,
+    
+            mag_size: 8,
+            rld_time: 0,
+    
+            cooldown: 50,
+            burst: 1,
+    
+            bullet_size: 0.075,
+            bullet_speed: 40,
+            bullet_spread: 0.1,
+
+            proj_dist: 0.615 + 0.625
+        });
     }
 
     draw(display: Display, player: Player, fist_offset: number): void {
@@ -44,16 +57,5 @@ export class BasicPistol implements Item {
         display.ctx.closePath();
         display.ctx.fill();
         display.ctx.stroke();
-    }
-
-    use(player: FpPlayer): void {
-        player.use_anim_start = Date.now();
-
-        const cos = Math.cos(player.facing_dir);
-        const sin = Math.sin(player.facing_dir);
-
-        const proj_dist = 0.615 + player.fist_offset();
-
-        this.tick_loop.projectiles.push(new Projectile(player.x + cos * proj_dist, player.y + sin * proj_dist, player.dx * SPD + cos * 40, player.dy * SPD + sin * 40, 0.075, 0));
     }
 }

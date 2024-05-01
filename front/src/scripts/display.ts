@@ -174,18 +174,20 @@ export class Display {
             this.ctx.stroke();
             this.ctx.fill();
         } else if (player.holding_item.holding_style == HoldingStyle.PISTOL) {
+            const HAND_DIST = PI / 8;
+
             this.ctx.fillStyle = SKIN_COLOR;
             this.ctx.strokeStyle = SKIN_BORDER_COLOR;
             this.ctx.lineWidth = this.scale / 9;
             
             this.ctx.beginPath();
-            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir - PI / 12, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.15 * player_scale, 0, Math.PI * 2, false);
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir - HAND_DIST / 2, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.15 * player_scale, 0, Math.PI * 2, false);
             this.ctx.closePath();
             this.ctx.stroke();
             this.ctx.fill();
             
             this.ctx.beginPath();
-            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI / 12, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.15 * player_scale, 0, Math.PI * 2, false);
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + HAND_DIST / 2, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.15 * player_scale, 0, Math.PI * 2, false);
             this.ctx.closePath();
             this.ctx.stroke();
             this.ctx.fill();
@@ -194,13 +196,13 @@ export class Display {
             this.ctx.strokeStyle = SUIT_BORDER_COLOR;
             
             this.ctx.beginPath();
-            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05 * player_scale), player.facing_dir - PI / 14, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.1875 * player_scale, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05 * player_scale), player.facing_dir - HAND_DIST / 2, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.1875 * player_scale, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
             this.ctx.closePath();
             this.ctx.stroke();
             this.ctx.fill();
             
             this.ctx.beginPath();
-            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05 * player_scale), player.facing_dir + PI / 14, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.1875 * player_scale, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05 * player_scale), player.facing_dir + HAND_DIST / 2, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.1875 * player_scale, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
             this.ctx.closePath();
             this.ctx.stroke();
             this.ctx.fill();

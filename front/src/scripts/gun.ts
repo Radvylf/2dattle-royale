@@ -1,6 +1,7 @@
 import { Display } from "./display";
 import { HoldingStyle, Item } from "./inventory";
-import { Player, FpPlayer } from "./player";
+import { Player, FpPlayer, SPD } from "./player";
+import { Projectile } from "./projectile";
 import { TickLoop } from "./tick";
 
 export interface Gun {
@@ -17,6 +18,8 @@ export interface Gun {
     bullet_size: number;
     bullet_speed: number;
     bullet_spread: number;
+
+    proj_dist: number;
 }
 
 export class GunItem implements Item {
@@ -35,7 +38,7 @@ export class GunItem implements Item {
     draw(display: Display, player: Player, fist_offset: number): void {}
 
     use(player: FpPlayer): void {
-        if (Date.now() < player.cooldown || player.burst_count >= this.gun.burst) {
+        if (Date.now() < player.cooldown) {
             return;
         }
 
@@ -46,8 +49,10 @@ export class GunItem implements Item {
         const cos = Math.cos(player.facing_dir);
         const sin = Math.sin(player.facing_dir);
 
-        const proj_dist = 0.615 + player.fist_offset(); // todo
+        const proj_dist = this.gun.proj_dist + player.fist_offset(); // todo
 
-        // todo
+        const dir = player.facing_dir + (Math.random() - 1 / 2) * Math.PI * this.gun.bullet_spread;
+
+        this.tick_loop.projectiles.push(new Projectile(player.x + cos * proj_dist, player.y + sin * proj_dist, player.dx * SPD + Math.cos(dir) * this.gun.bullet_speed, player.dy * SPD + Math.sin(dir) * this.gun.bullet_speed, this.gun.bullet_size, this.gun.damage));
     }
 }

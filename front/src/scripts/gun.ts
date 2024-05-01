@@ -53,6 +53,6 @@ export class GunItem implements Item {
 
         const dir = player.facing_dir + (Math.random() - 1 / 2) * Math.PI * this.gun.bullet_spread;
 
-        this.tick_loop.projectiles.push(new Projectile(player.x + cos * proj_dist, player.y + sin * proj_dist, player.dx * SPD + Math.cos(dir) * this.gun.bullet_speed, player.dy * SPD + Math.sin(dir) * this.gun.bullet_speed, this.gun.bullet_size, this.gun.damage));
+        this.tick_loop.projectiles.push(new Projectile(player.x + cos * proj_dist, player.y + sin * proj_dist, /*player.dx * SPD +*/ Math.cos(dir) * this.gun.bullet_speed, /*player.dy * SPD +*/ Math.sin(dir) * this.gun.bullet_speed, this.gun.bullet_size, this.gun.damage));
     }
 }

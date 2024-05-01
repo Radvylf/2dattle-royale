@@ -1,4 +1,5 @@
 import { Player } from "./player";
+import { HoldingStyle } from "./inventory";
 import { TickLoop } from "./tick";
 import { Controls } from "./controls";
 import EventEmitter from "eventemitter3";
@@ -129,6 +130,37 @@ export class Display {
             
             this.ctx.beginPath();
             this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05), player.facing_dir + PI / 3, 0.5625), player.facing_dir, player.active_hand == 1 ? fist_offset * PUNCH_DIST : 0)), this.scale * 0.1875, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
+            this.ctx.closePath();
+            this.ctx.stroke();
+            this.ctx.fill();
+        } else if (player.holding_item.holding_style == HoldingStyle.PISTOL) {
+            this.ctx.fillStyle = SKIN_COLOR;
+            this.ctx.strokeStyle = SKIN_BORDER_COLOR;
+            this.ctx.lineWidth = this.scale / 9;
+            
+            this.ctx.beginPath();
+            this.ctx.arc(...this.px(...this.shift_polar(player.x, player.y, player.facing_dir - PI / 12, 0.5625)), this.scale * 0.15, 0, Math.PI * 2, false);
+            this.ctx.closePath();
+            this.ctx.stroke();
+            this.ctx.fill();
+            
+            this.ctx.beginPath();
+            this.ctx.arc(...this.px(...this.shift_polar(player.x, player.y, player.facing_dir + PI / 12, 0.5625)), this.scale * 0.15, 0, Math.PI * 2, false);
+            this.ctx.closePath();
+            this.ctx.stroke();
+            this.ctx.fill();
+            
+            this.ctx.fillStyle = SUIT_COLOR;
+            this.ctx.strokeStyle = SUIT_BORDER_COLOR;
+            
+            this.ctx.beginPath();
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05), player.facing_dir - PI / 12, 0.5625)), this.scale * 0.1875, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
+            this.ctx.closePath();
+            this.ctx.stroke();
+            this.ctx.fill();
+            
+            this.ctx.beginPath();
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05), player.facing_dir + PI / 12, 0.5625)), this.scale * 0.1875, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
             this.ctx.closePath();
             this.ctx.stroke();
             this.ctx.fill();

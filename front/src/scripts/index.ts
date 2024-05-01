@@ -3,6 +3,7 @@ import { FpPlayer } from "./player";
 import { TickLoop } from "./tick";
 import { Ws } from "./ws";
 import { Controls } from "./controls";
+import { BasicPistol } from "./items/basic_pistol";
 import { Crate } from "./objects/crate";
 import { Rock } from "./objects/rock";
 import { DeciduousTree } from "./objects/deciduous_tree";
@@ -21,10 +22,12 @@ const id = 0; // await ws.log_in();
 const dims = new Dims();
 const controls = new Controls();
 const tick_loop = new TickLoop(ws);
-const player = new FpPlayer(dims, tick_loop, controls, id, -2, -4);
+const player = new FpPlayer(dims, tick_loop, controls, id, 0, 0);
 const display = new Display(canvas! as HTMLCanvasElement, dims, player, tick_loop, controls);
 
 tick_loop.attatch_player(player);
+
+player.holding_item = new BasicPistol();
 
 tick_loop.objects.insert_object(new Crate(-2, -4));
 tick_loop.objects.insert_object(new Crate(-4.5, -3));

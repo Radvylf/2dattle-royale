@@ -1,5 +1,6 @@
 import { Dims } from "./display";
-import { Item } from "./inventory";
+import * as display from "./display";
+import { HoldingStyle, Item } from "./inventory";
 import { Collision } from "./hitbox";
 import { TickLoop } from "./tick";
 import { Controls } from "./controls";
@@ -32,6 +33,20 @@ export class Player {
         this.holding_item = null; // todo
         this.active_hand = 0; // todo
         this.use_anim_start = null;
+    }
+
+    fist_offset() {
+        if (this.holding_item == null) {
+            return this.use_anim_start == null || Date.now() - this.use_anim_start >= display.PUNCH_TIME + display.PUNCH_PULLBACK_TIME ? 0 : (
+                Date.now() - this.use_anim_start < display.PUNCH_TIME ? (Date.now() - this.use_anim_start) / display.PUNCH_TIME : 1 - (Date.now() - this.use_anim_start - display.PUNCH_TIME) / display.PUNCH_PULLBACK_TIME
+            ) * display.PUNCH_DIST;
+        } else if (this.holding_item.holding_style == HoldingStyle.PISTOL) {
+            return this.use_anim_start == null || Date.now() - this.use_anim_start >= display.RECOIL_TIME + display.RECOIL_FORWARD_TIME ? 0 : (
+                Date.now() - this.use_anim_start < display.RECOIL_TIME ? (Date.now() - this.use_anim_start) / display.RECOIL_TIME : 1 - (Date.now() - this.use_anim_start - display.RECOIL_TIME) / display.RECOIL_FORWARD_TIME
+            ) * -display.RECOIL_DIST;
+        } else {
+            return 0;
+        }
     }
 }
 

@@ -7,6 +7,16 @@ import EventEmitter from "eventemitter3";
 
 const PI = Math.PI;
 
+export const CROUCHING_SCALE = 0.8;
+
+export const PUNCH_TIME = 40;
+export const PUNCH_PULLBACK_TIME = 280;
+export const PUNCH_DIST = 0.35;
+
+export const RECOIL_TIME = 20;
+export const RECOIL_FORWARD_TIME = 140;
+export const RECOIL_DIST = 0.1;
+
 export class Dims extends EventEmitter {
     x!: number;
     y!: number;
@@ -94,8 +104,6 @@ export class Display {
         this.ctx.strokeStyle = SUIT_BORDER_COLOR;
         this.ctx.lineWidth = this.scale / 6;
 
-        const CROUCHING_SCALE = 0.8;
-
         const player_scale = player.crouching ? CROUCHING_SCALE : 1;
         
         this.ctx.beginPath();
@@ -115,19 +123,9 @@ export class Display {
         this.ctx.closePath();
         this.ctx.fill();*/
 
-        const PUNCH_TIME = 40;
-        const PUNCH_PULLBACK_TIME = 280;
-        const PUNCH_DIST = 0.35;
-
-        const RECOIL_TIME = 20;
-        const RECOIL_FORWARD_TIME = 140;
-        const RECOIL_DIST = 0.1;
+        const fist_offset = player.fist_offset();
 
         if (player.holding_item == null) {
-            const fist_offset = player.use_anim_start == null || Date.now() - player.use_anim_start >= PUNCH_TIME + PUNCH_PULLBACK_TIME ? 0 : (
-                Date.now() - player.use_anim_start < PUNCH_TIME ? (Date.now() - player.use_anim_start) / PUNCH_TIME : 1 - (Date.now() - player.use_anim_start - PUNCH_TIME) / PUNCH_PULLBACK_TIME
-            ) * PUNCH_DIST;
-
             this.ctx.fillStyle = SKIN_COLOR;
             this.ctx.strokeStyle = SKIN_BORDER_COLOR;
             this.ctx.lineWidth = this.scale / 9;
@@ -159,22 +157,18 @@ export class Display {
             this.ctx.stroke();
             this.ctx.fill();
         } else if (player.holding_item.holding_style == HoldingStyle.PISTOL) {
-            const recoil_offset = player.use_anim_start == null || Date.now() - player.use_anim_start >= RECOIL_TIME + RECOIL_FORWARD_TIME ? 0 : (
-                Date.now() - player.use_anim_start < RECOIL_TIME ? (Date.now() - player.use_anim_start) / RECOIL_TIME : 1 - (Date.now() - player.use_anim_start - RECOIL_TIME) / RECOIL_FORWARD_TIME
-            ) * -RECOIL_DIST;
-
             this.ctx.fillStyle = SKIN_COLOR;
             this.ctx.strokeStyle = SKIN_BORDER_COLOR;
             this.ctx.lineWidth = this.scale / 9;
             
             this.ctx.beginPath();
-            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir - PI / 12, 0.5625 * player_scale), player.facing_dir, recoil_offset)), this.scale * 0.15 * player_scale, 0, Math.PI * 2, false);
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir - PI / 12, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.15 * player_scale, 0, Math.PI * 2, false);
             this.ctx.closePath();
             this.ctx.stroke();
             this.ctx.fill();
             
             this.ctx.beginPath();
-            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI / 12, 0.5625 * player_scale), player.facing_dir, recoil_offset)), this.scale * 0.15 * player_scale, 0, Math.PI * 2, false);
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI / 12, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.15 * player_scale, 0, Math.PI * 2, false);
             this.ctx.closePath();
             this.ctx.stroke();
             this.ctx.fill();
@@ -183,18 +177,18 @@ export class Display {
             this.ctx.strokeStyle = SUIT_BORDER_COLOR;
             
             this.ctx.beginPath();
-            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05 * player_scale), player.facing_dir - PI / 14, 0.5625 * player_scale), player.facing_dir, recoil_offset)), this.scale * 0.1875 * player_scale, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05 * player_scale), player.facing_dir - PI / 14, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.1875 * player_scale, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
             this.ctx.closePath();
             this.ctx.stroke();
             this.ctx.fill();
             
             this.ctx.beginPath();
-            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05 * player_scale), player.facing_dir + PI / 14, 0.5625 * player_scale), player.facing_dir, recoil_offset)), this.scale * 0.1875 * player_scale, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05 * player_scale), player.facing_dir + PI / 14, 0.5625 * player_scale), player.facing_dir, fist_offset)), this.scale * 0.1875 * player_scale, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
             this.ctx.closePath();
             this.ctx.stroke();
             this.ctx.fill();
 
-            player.holding_item.draw(this, player, recoil_offset + 0.5625 * (player_scale - 1));
+            player.holding_item.draw(this, player, fist_offset + 0.5625 * (player_scale - 1));
         }
     }
 

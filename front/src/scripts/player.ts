@@ -5,10 +5,13 @@ import { TickLoop } from "./tick";
 import { Controls } from "./controls";
 
 export const SPD = 10;
+export const DSPD = 10;
 
 export class Player {
     x: number;
     y: number;
+    dx: number;
+    dy: number;
     facing_dir: number;
 
     holding_item: Item | null;
@@ -18,6 +21,8 @@ export class Player {
     constructor(x: number, y: number, facing_dir: number) {
         this.x = x;
         this.y = y;
+        this.dx = 0;
+        this.dy = 0;
         this.facing_dir = facing_dir;
 
         this.holding_item = null; // todo
@@ -72,8 +77,14 @@ export class FpPlayer extends Player {
             mov_y /= Math.SQRT2;
         }
 
-        const tick_mov_x = mov_x * tick_diff_ms / 1000 * SPD;
-        const tick_mov_y = mov_y * tick_diff_ms / 1000 * SPD;
+        const dd_dir = Math.atan2(mov_y - this.dy, mov_x - this.dx);
+        const dd_dist = Math.hypot(mov_x - this.dx, mov_y - this.dy);
+
+        this.dx += Math.cos(dd_dir) * Math.min(dd_dist, tick_diff_ms / 1000 * DSPD);
+        this.dy += Math.sin(dd_dir) * Math.min(dd_dist, tick_diff_ms / 1000 * DSPD);
+
+        const tick_mov_x = this.dx * tick_diff_ms / 1000 * SPD;
+        const tick_mov_y = this.dy * tick_diff_ms / 1000 * SPD;
 
         if (tick_mov_x != 0 || tick_mov_y != 0) {
             const collision_possible = this.tick_loop.objects.collision_possible(this.x, this.y, 1 / 2, tick_mov_x, tick_mov_y);

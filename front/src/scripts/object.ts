@@ -31,7 +31,8 @@ export class MapObject {
     draw_upper_layer(display: Display) {}
 }
 
-const GRID_SIZE = 2;
+const VIS_GRID_SIZE = 8;
+const COLLISION_GRID_SIZE = 2;
 
 export class MapObjectTracker {
     objects: Set<MapObject>;
@@ -44,11 +45,11 @@ export class MapObjectTracker {
         this.collision_grid = new Map();
     }
 
-    within_grid_bounds(grid: Map<string, Set<MapObject>>, min_x: number, max_x: number, min_y: number, max_y: number) {
+    within_grid_bounds(grid: Map<string, Set<MapObject>>, grid_size: number, min_x: number, max_x: number, min_y: number, max_y: number) {
         let objects: Set<MapObject> = new Set();
 
-        for (let gx = Math.floor(min_x / GRID_SIZE); gx <= Math.ceil(max_x / GRID_SIZE); gx++) {
-            for (let gy = Math.floor(min_y / GRID_SIZE); gy <= Math.ceil(max_y / GRID_SIZE); gy++) {
+        for (let gx = Math.floor(min_x / grid_size); gx <= Math.ceil(max_x / grid_size); gx++) {
+            for (let gy = Math.floor(min_y / grid_size); gy <= Math.ceil(max_y / grid_size); gy++) {
                 const key = gx + "," + gy;
                 if (grid.has(key)) {
                     for (const object of Array.from(grid.get(key)!)) {
@@ -63,7 +64,7 @@ export class MapObjectTracker {
 
     visible_in_viewport(x: number, y: number, width: number, height: number) {
         return this.within_grid_bounds(
-            this.vis_grid,
+            this.vis_grid, VIS_GRID_SIZE,
             x - width / 2, x + width / 2,
             y - height / 2, y + height / 2
         );
@@ -75,15 +76,15 @@ export class MapObjectTracker {
         const min_y = Math.min(y - radius, y - radius + mov_y);
         const max_y = Math.max(y + radius, y + radius + mov_y);
 
-        return this.within_grid_bounds(this.collision_grid, min_x, max_x, min_y, max_y);
+        return this.within_grid_bounds(this.collision_grid, COLLISION_GRID_SIZE, min_x, max_x, min_y, max_y);
     }
 
     insert_object(object: MapObject) {
         const vis_bounds = object.vis_square_bounds();
         const collision_bounds = object.hitbox.square_bounds(object.x, object.y);
 
-        for (let gx = Math.floor(vis_bounds.min_x / GRID_SIZE); gx <= Math.ceil(vis_bounds.max_x / GRID_SIZE); gx++) {
-            for (let gy = Math.floor(vis_bounds.min_y / GRID_SIZE); gy <= Math.ceil(vis_bounds.max_y / GRID_SIZE); gy++) {
+        for (let gx = Math.floor(vis_bounds.min_x / VIS_GRID_SIZE); gx <= Math.ceil(vis_bounds.max_x / VIS_GRID_SIZE); gx++) {
+            for (let gy = Math.floor(vis_bounds.min_y / VIS_GRID_SIZE); gy <= Math.ceil(vis_bounds.max_y / VIS_GRID_SIZE); gy++) {
                 const key = gx + "," + gy;
                 if (!this.vis_grid.has(key)) {
                     this.vis_grid.set(key, new Set());
@@ -92,8 +93,8 @@ export class MapObjectTracker {
             }
         }
 
-        for (let gx = Math.floor(collision_bounds.min_x / GRID_SIZE); gx <= Math.ceil(collision_bounds.max_x / GRID_SIZE); gx++) {
-            for (let gy = Math.floor(collision_bounds.min_y / GRID_SIZE); gy <= Math.ceil(collision_bounds.max_y / GRID_SIZE); gy++) {
+        for (let gx = Math.floor(collision_bounds.min_x / COLLISION_GRID_SIZE); gx <= Math.ceil(collision_bounds.max_x / COLLISION_GRID_SIZE); gx++) {
+            for (let gy = Math.floor(collision_bounds.min_y / COLLISION_GRID_SIZE); gy <= Math.ceil(collision_bounds.max_y / COLLISION_GRID_SIZE); gy++) {
                 const key = gx + "," + gy;
                 if (!this.collision_grid.has(key)) {
                     this.collision_grid.set(key, new Set());

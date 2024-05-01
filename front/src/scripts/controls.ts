@@ -52,19 +52,23 @@ export class Controls extends EventEmitter {
         this.mouse_btns_down = new Set();
 
         window.addEventListener("keydown", (event) => {
-            this.keys_down.add(event.code);
+            let binds_now_down = [];
 
             bindings: for (const binding of bindings) {
                 if (binding.keys.has(event.code)) {
                     for (const key of Array.from(binding.keys)) {
-                        if (key != event.code && this.keys_down.has(key)) {
+                        if (this.keys_down.has(key)) {
                             continue bindings;
                         }
                     }
 
-                    this.emit("bind_down", binding.id);
+                    binds_now_down.push(binding.id);
                 }
             }
+
+            this.keys_down.add(event.code);
+
+            for (const binding of binds_now_down) this.emit("bind_down", binding);
         });
 
         window.addEventListener("keyup", (event) => {

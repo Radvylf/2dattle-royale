@@ -1,6 +1,5 @@
 import { Display } from "../display";
 import { AbstractPistol } from "./abstract_pistol";
-import { HoldingStyle } from "../item";
 
 const SLIDE_RACK_TIME = 10;
 const SLIDE_RACK_FORWARD_TIME = 120;

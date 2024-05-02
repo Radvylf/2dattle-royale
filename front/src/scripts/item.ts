@@ -4,7 +4,7 @@ import { TickLoop } from "./tick";
 
 export enum HoldingStyle {
     PISTOL,
-    DOUBLE_PISTOL
+    RIFLE
 }
 
 export interface Item {

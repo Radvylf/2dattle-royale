@@ -1,10 +1,11 @@
-import { Display } from "../display";
+import { Display, CROUCHING_SCALE } from "../display";
 import { HoldingStyle } from "../item";
 import { FpPlayer } from "../player";
 import { Projectile } from "../projectile";
 import { GunStats, AbstractGun } from "./abstract_gun";
 
 export interface RifleStats extends GunStats {
+    front_hand_dist: number;
     proj_dist: number; // specified from center of hand
 }
 
@@ -21,7 +22,7 @@ export abstract class AbstractRifle extends AbstractGun {
         const cos = Math.cos(player.facing_dir);
         const sin = Math.sin(player.facing_dir);
 
-        const proj_dist = this.stats.proj_dist + player.fist_offset(); // todo
+        const proj_dist = 0.6125 * (player.crouching ? CROUCHING_SCALE : 1) + player.fist_offset() + this.stats.proj_dist;
 
         const norm = Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
         const dir = player.facing_dir + norm * Math.PI * this.stats.bullet_spread / 4;

@@ -9,20 +9,33 @@ export class BasicAssaultRifle extends AbstractRifle {
     stats = {
         damage: 0,
 
-        mag_size: 8,
+        mag_size: 24,
         rld_time: 0,
 
-        cooldown: 50,
-        burst: 1,
+        cooldown: 125,
+        burst: Infinity,
 
         bullet_size: 0.075,
-        bullet_speed: 40,
-        bullet_spread: 0.1,
+        bullet_speed: 60,
+        bullet_spread: 0.0375,
 
-        proj_dist: 0.04 + 0.625
+        front_hand_dist: 0.04 + 1.175 / 2,
+        proj_dist: 0.04 + 1.175 + 0.075 * Math.SQRT2
     };
 
     draw(display: Display, x: number, y: number, pointing_dir: number, shoot_anim_start: number): void {
-        // todo
+        display.ctx.fillStyle = "#222222";
+        display.ctx.strokeStyle = "#000000";
+        display.ctx.lineWidth = display.scale / 24;
+
+        display.ctx.beginPath();
+        display.ctx.moveTo(...display.px(...display.shift_polar(...display.shift_polar(x, y, pointing_dir, 0.04), pointing_dir - Math.PI / 2, 0.075)));
+        display.ctx.lineTo(...display.px(...display.shift_polar(...display.shift_polar(x, y, pointing_dir, 0.04), pointing_dir + Math.PI / 2, 0.075)));
+        display.ctx.lineTo(...display.px(...display.shift_polar(...display.shift_polar(...display.shift_polar(x, y, pointing_dir, 0.04), pointing_dir + Math.PI / 2, 0.075), pointing_dir, 1.175)));
+        display.ctx.lineTo(...display.px(...display.shift_polar(...display.shift_polar(x, y, pointing_dir, 0.04), pointing_dir, 1.175 + 0.075 * Math.SQRT2)));
+        display.ctx.lineTo(...display.px(...display.shift_polar(...display.shift_polar(...display.shift_polar(x, y, pointing_dir, 0.04), pointing_dir - Math.PI / 2, 0.075), pointing_dir, 1.175)));
+        display.ctx.closePath();
+        display.ctx.fill();
+        display.ctx.stroke();
     }
 }

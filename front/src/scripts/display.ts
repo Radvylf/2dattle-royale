@@ -4,6 +4,7 @@ import { TickLoop } from "./tick";
 import { Projectile } from "./projectile";
 import { Controls } from "./controls";
 import EventEmitter from "eventemitter3";
+import { AbstractRifle } from "./items/abstract_rifle";
 
 const PI = Math.PI;
 
@@ -207,9 +208,34 @@ export class Display {
             this.ctx.stroke();
             this.ctx.fill();
 
-            player.holding_item.draw(this, ...this.shift_polar(player.x, player.y, player.facing_dir, 0.6125 * player_scale + fist_offset), player.facing_dir, player.use_anim_start ?? -Infinity);
+            player.holding_item.draw(this, ...this.shift_polar(player.x, player.y, player.facing_dir, 0.6125 * player_scale + fist_offset), player.facing_dir, player.use_anim_start ?? -Infinity); // todo: 0.04/0.05 isn't on the hand
         } else if (player.holding_item.holding_style == HoldingStyle.RIFLE) {
-            // todo
+            player.holding_item.draw(this, ...this.shift_polar(player.x, player.y, player.facing_dir, 0.6125 * player_scale + fist_offset), player.facing_dir, player.use_anim_start ?? -Infinity);
+
+            this.ctx.fillStyle = SKIN_COLOR;
+            this.ctx.strokeStyle = SKIN_BORDER_COLOR;
+            this.ctx.lineWidth = this.scale / 9;
+            
+            this.ctx.beginPath();
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir, 0.5625 * player_scale + fist_offset), player.facing_dir + PI / 2, 0)), this.scale * 0.15 * player_scale, 0, Math.PI * 2, false);
+            this.ctx.closePath();
+            this.ctx.stroke();
+            this.ctx.fill();
+            
+            this.ctx.beginPath();
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir, 0.5625 * player_scale + (player.holding_item as AbstractRifle).stats.front_hand_dist + fist_offset), player.facing_dir - PI / 2, 0.075)), this.scale * 0.125 * player_scale, 0, Math.PI * 2, false);
+            this.ctx.closePath();
+            this.ctx.stroke();
+            this.ctx.fill();
+            
+            this.ctx.fillStyle = SUIT_COLOR;
+            this.ctx.strokeStyle = SUIT_BORDER_COLOR;
+            
+            this.ctx.beginPath();
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir + PI, 0.05 * player_scale), player.facing_dir, 0.5625 * player_scale + fist_offset), player.facing_dir + PI / 2, 0)), this.scale * 0.1875 * player_scale, player.facing_dir - PI / 2, player.facing_dir + PI / 2, true);
+            this.ctx.closePath();
+            this.ctx.stroke();
+            this.ctx.fill();
         }
     }
 

@@ -3,11 +3,11 @@ import { FpPlayer } from "./player";
 import { TickLoop } from "./tick";
 import { Ws } from "./ws";
 import { Controls } from "./controls";
-import { BasicPistol } from "./items/basic_pistol";
 import { Crate } from "./objects/crate";
 import { Rock } from "./objects/rock";
 import { DeciduousTree } from "./objects/deciduous_tree";
 import { ConiferousTree } from "./objects/coniferous_tree";
+import { BasicAssaultRifle } from "./items/basic_assault_rifle";
 
 const canvas = document.getElementById("display");
 
@@ -27,7 +27,7 @@ const display = new Display(canvas! as HTMLCanvasElement, dims, player, tick_loo
 
 tick_loop.attatch_player(player);
 
-player.holding_item = new BasicPistol(tick_loop);
+player.holding_item = new BasicAssaultRifle(tick_loop);
 
 tick_loop.objects.insert_object(new Crate(-2, -4));
 tick_loop.objects.insert_object(new Crate(-4.5, -3));

@@ -45,6 +45,10 @@ export class Player {
             return this.use_anim_start == null || Date.now() - this.use_anim_start >= display.RECOIL_TIME + display.RECOIL_FORWARD_TIME ? 0 : (
                 Date.now() - this.use_anim_start < display.RECOIL_TIME ? (Date.now() - this.use_anim_start) / display.RECOIL_TIME : 1 - (Date.now() - this.use_anim_start - display.RECOIL_TIME) / display.RECOIL_FORWARD_TIME
             ) * -display.RECOIL_DIST;
+        } else if (this.holding_item.holding_style == HoldingStyle.RIFLE) {
+            return this.use_anim_start == null || Date.now() - this.use_anim_start >= display.RECOIL_TIME + display.RECOIL_FORWARD_TIME ? 0 : (
+                Date.now() - this.use_anim_start < display.RECOIL_TIME ? (Date.now() - this.use_anim_start) / display.RECOIL_TIME : 1 - (Date.now() - this.use_anim_start - display.RECOIL_TIME) / display.RECOIL_FORWARD_TIME
+            ) * -display.RECOIL_DIST * 1.5;
         } else {
             return 0;
         }

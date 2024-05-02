@@ -24,14 +24,16 @@ export abstract class AbstractPistol extends AbstractGun {
         const proj_dist = 0.6125 * (player.crouching ? CROUCHING_SCALE : 1) + player.fist_offset() + this.stats.proj_dist;
 
         const norm = Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
-        const dir = player.facing_dir + norm * Math.PI * this.stats.bullet_spread / 4;
+        const dir = player.facing_dir + norm * Math.PI * this.stats.dir_stdd / 4;
 
         this.tick_loop.projectiles.push(new Projectile(
+            this.tick_loop,
             player.x + cos * proj_dist,
             player.y + sin * proj_dist,
             Math.cos(dir) * this.stats.bullet_speed,
             Math.sin(dir) * this.stats.bullet_speed,
             this.stats.bullet_size,
+            this.stats.max_dist,
             this.stats.damage
         ));
     }

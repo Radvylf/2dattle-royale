@@ -18,6 +18,8 @@ export const RECOIL_TIME = 20;
 export const RECOIL_FORWARD_TIME = 140;
 export const RECOIL_DIST = 0.1;
 
+export const BULLET_TRAIL_DURATION = 0.25;
+
 export class Dims extends EventEmitter {
     x!: number;
     y!: number;
@@ -82,23 +84,28 @@ export class Display {
     }
 
     draw_projectile(proj: Projectile) {
-        this.ctx.fillStyle = "#ffffff";
+        if (proj.collision_time == null) {
+            this.ctx.fillStyle = "#ffffff";
 
-        const dir = Math.atan2(proj.dy, proj.dx);
+            const dir = Math.atan2(proj.dy, proj.dx);
 
-        this.ctx.beginPath();
-        this.ctx.moveTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI / 4, proj.size * Math.SQRT1_2)));
-        this.ctx.lineTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI * 3 / 4, proj.size * Math.SQRT1_2)));
-        this.ctx.lineTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI * 5 / 4, proj.size * Math.SQRT1_2)));
-        this.ctx.lineTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI * 7 / 4, proj.size * Math.SQRT1_2)));
-        this.ctx.closePath();
-        this.ctx.fill();
+            this.ctx.beginPath();
+            this.ctx.moveTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI / 4, proj.size * Math.SQRT1_2)));
+            this.ctx.lineTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI * 3 / 4, proj.size * Math.SQRT1_2)));
+            this.ctx.lineTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI * 5 / 4, proj.size * Math.SQRT1_2)));
+            this.ctx.lineTo(...this.px(...this.shift_polar(proj.x, proj.y, dir + Math.PI * 7 / 4, proj.size * Math.SQRT1_2)));
+            this.ctx.closePath();
+            this.ctx.fill();
+        }
 
-        const BULLET_TRAIL_DURATION = 0.25;
+        const now = Date.now();
 
-        const trail_mul = Math.min(BULLET_TRAIL_DURATION, (Date.now() - proj.trail_time) / 1000);
+        const trail_mul = Math.min(BULLET_TRAIL_DURATION, (now - proj.shot_time) / 1000);
 
-        const gradient = this.ctx.createLinearGradient(...this.px(proj.x, proj.y), ...this.px(proj.x - proj.dx * BULLET_TRAIL_DURATION, proj.y - proj.dy * BULLET_TRAIL_DURATION));
+        const sim_x = proj.start_x + proj.dx * (now - proj.shot_time) / 1000;
+        const sim_y = proj.start_y + proj.dy * (now - proj.shot_time) / 1000;
+
+        const gradient = this.ctx.createLinearGradient(...this.px(sim_x, sim_y), ...this.px(sim_x - proj.dx * BULLET_TRAIL_DURATION, sim_y - proj.dy * BULLET_TRAIL_DURATION));
 
         gradient.addColorStop(0, "rgba(255, 255, 255, 0.5)");
         gradient.addColorStop(1, "rgba(255, 255, 255, 0.0)");
@@ -108,7 +115,7 @@ export class Display {
 
         this.ctx.beginPath();
         this.ctx.moveTo(...this.px(proj.x, proj.y));
-        this.ctx.lineTo(...this.px(proj.x - proj.dx * trail_mul, proj.y - proj.dy * trail_mul));
+        this.ctx.lineTo(...this.px(sim_x - proj.dx * trail_mul, sim_y - proj.dy * trail_mul));
         this.ctx.stroke();
     }
 

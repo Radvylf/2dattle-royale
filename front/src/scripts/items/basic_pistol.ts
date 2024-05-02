@@ -17,7 +17,9 @@ export class BasicPistol extends AbstractPistol {
 
         bullet_size: 0.075,
         bullet_speed: 40,
-        bullet_spread: 0.1,
+
+        dir_stdd: 0.1,
+        max_dist: 100,
 
         proj_dist: 0.04 + 0.625
     };

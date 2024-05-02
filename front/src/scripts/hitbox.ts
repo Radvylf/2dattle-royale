@@ -1,4 +1,5 @@
 import { Player } from "./player";
+import { Projectile } from "./projectile";
 
 const TINY_DIST = 2 ** -10;
 
@@ -129,6 +130,7 @@ export interface SquareBounds {
 
 export interface Hitbox {
     player_collision(x: number, y: number, player: Player, mov_x: number, mov_y: number): Collision;
+    projectile_collision(x: number, y: number, proj: Projectile, tick_mul: number): number;
     square_bounds(x: number, y: number): SquareBounds;
 }
 
@@ -146,6 +148,15 @@ export class SquareHitbox implements Hitbox {
             [x + this.size / 2, y + this.size / 2],
             [x - this.size / 2, y + this.size / 2]
         ], mov_x, mov_y);
+    }
+
+    projectile_collision(x: number, y: number, proj: Projectile, tick_mul: number): number {
+        return circle_polygon_collision(proj.x, proj.y, 0, [
+            [x - this.size / 2, y - this.size / 2],
+            [x + this.size / 2, y - this.size / 2],
+            [x + this.size / 2, y + this.size / 2],
+            [x - this.size / 2, y + this.size / 2]
+        ], proj.dx * tick_mul, proj.dy * tick_mul).dist;
     }
 
     square_bounds(x: number, y: number): SquareBounds {
@@ -167,6 +178,10 @@ export class CircleHitbox implements Hitbox {
 
     player_collision(x: number, y: number, player: Player, mov_x: number, mov_y: number): Collision {
         return circle_circle_collision(player.x, player.y, 1 / 2, x, y, this.size / 2, mov_x, mov_y);
+    }
+
+    projectile_collision(x: number, y: number, proj: Projectile, tick_mul: number): number {
+        return circle_circle_collision(proj.x, proj.y, 0, x, y, this.size / 2, proj.dx * tick_mul, proj.dy * tick_mul).dist;
     }
 
     square_bounds(x: number, y: number): SquareBounds {

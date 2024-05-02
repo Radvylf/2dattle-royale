@@ -15,7 +15,9 @@ export interface GunStats {
 
     bullet_size: number;
     bullet_speed: number;
-    bullet_spread: number;
+
+    dir_stdd: number;
+    max_dist: number;
 }
 
 export abstract class AbstractGun implements Item {

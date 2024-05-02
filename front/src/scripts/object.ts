@@ -1,6 +1,7 @@
 import { Display } from "./display";
 import { Player } from "./player";
 import { Hitbox } from "./hitbox";
+import { Projectile } from "./projectile";
 
 export class MapObject {
     x: number;
@@ -21,6 +22,10 @@ export class MapObject {
 
     player_collision(player: Player, mov_x: number, mov_y: number) {
         return this.hitbox.player_collision(this.x, this.y, player, mov_x, mov_y);
+    }
+
+    projectile_collision(proj: Projectile, tick_mul: number) {
+        return this.hitbox.projectile_collision(this.x, this.y, proj, tick_mul);
     }
 
     vis_square_bounds() {

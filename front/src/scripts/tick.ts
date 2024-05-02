@@ -31,7 +31,9 @@ export class TickLoop {
     tick(tick_diff_ms: number) {
         this.player?.tick(tick_diff_ms);
 
-        for (const proj of this.projectiles) proj.tick(tick_diff_ms);
+        this.projectiles = this.projectiles.filter(proj => proj.tick(tick_diff_ms));
+
+        console.log(this.projectiles.length);
     }
 
     attatch_player(player: FpPlayer) {

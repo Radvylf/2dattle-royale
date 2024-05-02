@@ -17,7 +17,9 @@ export class BasicAssaultRifle extends AbstractRifle {
 
         bullet_size: 0.075,
         bullet_speed: 60,
-        bullet_spread: 0.0375,
+
+        dir_stdd: 0.0375,
+        max_dist: 100,
 
         front_hand_dist: 0.04 + 1.175 / 2,
         proj_dist: 0.04 + 1.175 + 0.075 * Math.SQRT2

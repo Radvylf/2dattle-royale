@@ -38,8 +38,8 @@ export class Projectile {
 
     tick(tick_diff_ms: number) {
         if (this.collision_time == null) {
-            const tick_dx = this.dx * tick_diff_ms / 1000;
-            const tick_dy = this.dy * tick_diff_ms / 1000;
+            const tick_dx = Math.min(this.dx * tick_diff_ms / 1000, this.max_dist); // this.max_dist is only to prevent loading thousands of collision grid cells if unfocused for a long time
+            const tick_dy = Math.min(this.dy * tick_diff_ms / 1000, this.max_dist);
 
             const collision_possible = this.tick_loop.objects.collision_possible(this.x, this.y, 1 / 2, tick_dx, tick_dy);
 

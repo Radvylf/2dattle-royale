@@ -3,7 +3,8 @@ import { Player, FpPlayer } from "./player";
 import { TickLoop } from "./tick";
 
 export enum HoldingStyle {
-    PISTOL
+    PISTOL,
+    DOUBLE_PISTOL
 }
 
 export interface Item {
@@ -11,7 +12,7 @@ export interface Item {
 
     holding_style: HoldingStyle;
 
-    draw(display: Display, player: Player, fist_offset: number): void;
+    draw(display: Display, x: number, y: number, pointing_dir: number, shoot_anim_start: number): void;
 
     use(player: FpPlayer): void;
 }

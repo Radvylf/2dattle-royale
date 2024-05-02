@@ -1,10 +1,10 @@
 import { Dims } from "./display";
 import * as display from "./display";
-import { HoldingStyle, Item } from "./inventory";
+import { HoldingStyle, Item } from "./item";
 import { Collision } from "./hitbox";
 import { TickLoop } from "./tick";
 import { Controls } from "./controls";
-import { GunItem } from "./gun";
+import { AbstractGun } from "./items/abstract_gun";
 
 export const SPD = 10;
 export const DSPD = 10;
@@ -166,7 +166,7 @@ export class FpPlayer extends Player {
 
         this.crouching = this.controls.is_bind_down("crouch");
 
-        if (this.controls.is_bind_down("use") && this.holding_item != null && this.holding_item instanceof GunItem && Date.now() >= this.cooldown && this.burst_count < this.holding_item.gun.burst) this.holding_item.use(this);
+        if (this.controls.is_bind_down("use") && this.holding_item != null && this.holding_item instanceof AbstractGun && Date.now() >= this.cooldown && this.burst_count < this.holding_item.stats.burst) this.holding_item.use(this);
     }
 
     use() {

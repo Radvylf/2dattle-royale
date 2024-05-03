@@ -200,8 +200,6 @@ export class Controls extends EventEmitter {
         });
 
         window.addEventListener("wheel", (event) => {
-            console.log(event.deltaMode, event.deltaY);
-
             let dir = 0;
 
             if (event.deltaMode == event.DOM_DELTA_PIXEL) {
@@ -247,15 +245,17 @@ export class Controls extends EventEmitter {
         });
 
         window.addEventListener("blur", () => {
-            this.keys_down.clear();
+            console.log("blur");
 
-            // todo: clear mouse_btns, issue clear event
+            this.keys_down.clear();
+            this.mouse_btns_down.clear();
 
             this.mouse_offset = undefined;
 
             this.partial_scroll_pixels = 0;
 
             this.emit("mouse_offset_update");
+            this.emit("clear");
         });
     }
 

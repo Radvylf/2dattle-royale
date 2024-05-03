@@ -189,6 +189,10 @@ export class FpPlayer extends Player {
             }
         });
 
+        controls.on("clear", () => {
+            this.burst_count = 0;
+        });
+
         window.setInterval(this.send_position_update.bind(this), 100);
     }
 

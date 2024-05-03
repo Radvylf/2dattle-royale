@@ -12,7 +12,7 @@ export class BasicPistol extends AbstractPistol {
         mag_size: 8,
         rld_time: 0,
 
-        cooldown: 50,
+        cooldown: 100,
         burst: 1,
 
         bullet_size: 0.075,

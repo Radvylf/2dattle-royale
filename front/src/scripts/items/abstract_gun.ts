@@ -32,13 +32,19 @@ export abstract class AbstractGun implements Item {
 
     abstract draw(display: Display, x: number, y: number, pointing_dir: number, shoot_anim_start: number): void;
 
-    use(player: FpPlayer): void {
+    swap_cooldown(): number {
+        return this.stats.cooldown;
+    }
+    
+    use(player: FpPlayer): boolean {
         if (Date.now() < player.cooldown) {
-            return;
+            return false;
         }
 
         player.use_anim_start = Date.now();
         player.cooldown = Date.now() + this.stats.cooldown;
         player.burst_count++;
+
+        return true;
     }
 }

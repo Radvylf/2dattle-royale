@@ -14,5 +14,6 @@ export interface Item {
 
     draw(display: Display, x: number, y: number, pointing_dir: number, shoot_anim_start: number): void;
 
-    use(player: FpPlayer): void;
+    swap_cooldown(): number;
+    use(player: FpPlayer): boolean;
 }

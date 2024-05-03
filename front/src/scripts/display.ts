@@ -150,7 +150,9 @@ export class Display {
 
         const fist_offset = player.fist_offset();
 
-        if (player.holding_item == null) {
+        const holding_item = player.holding_item();
+
+        if (holding_item == null) {
             this.ctx.fillStyle = SKIN_COLOR;
             this.ctx.strokeStyle = SKIN_BORDER_COLOR;
             this.ctx.lineWidth = this.scale / 9;
@@ -181,7 +183,7 @@ export class Display {
             this.ctx.closePath();
             this.ctx.stroke();
             this.ctx.fill();
-        } else if (player.holding_item.holding_style == HoldingStyle.PISTOL) {
+        } else if (holding_item.holding_style == HoldingStyle.PISTOL) {
             const HAND_DIST = PI / 8;
 
             this.ctx.fillStyle = SKIN_COLOR;
@@ -215,9 +217,9 @@ export class Display {
             this.ctx.stroke();
             this.ctx.fill();
 
-            player.holding_item.draw(this, ...this.shift_polar(player.x, player.y, player.facing_dir, 0.6125 * player_scale + fist_offset), player.facing_dir, player.use_anim_start ?? -Infinity); // todo: 0.04/0.05 isn't on the hand
-        } else if (player.holding_item.holding_style == HoldingStyle.RIFLE) {
-            player.holding_item.draw(this, ...this.shift_polar(player.x, player.y, player.facing_dir, 0.6125 * player_scale + fist_offset), player.facing_dir, player.use_anim_start ?? -Infinity);
+            holding_item.draw(this, ...this.shift_polar(player.x, player.y, player.facing_dir, 0.6125 * player_scale + fist_offset), player.facing_dir, player.use_anim_start ?? -Infinity); // todo: 0.04/0.05 isn't on the hand
+        } else if (holding_item.holding_style == HoldingStyle.RIFLE) {
+            holding_item.draw(this, ...this.shift_polar(player.x, player.y, player.facing_dir, 0.6125 * player_scale + fist_offset), player.facing_dir, player.use_anim_start ?? -Infinity);
 
             this.ctx.fillStyle = SKIN_COLOR;
             this.ctx.strokeStyle = SKIN_BORDER_COLOR;
@@ -230,7 +232,7 @@ export class Display {
             this.ctx.fill();
             
             this.ctx.beginPath();
-            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir, 0.5625 * player_scale + (player.holding_item as AbstractRifle).stats.front_hand_dist + fist_offset), player.facing_dir - PI / 2, 0.075)), this.scale * 0.125 * player_scale, 0, Math.PI * 2, false);
+            this.ctx.arc(...this.px(...this.shift_polar(...this.shift_polar(player.x, player.y, player.facing_dir, 0.5625 * player_scale + (holding_item as AbstractRifle).stats.front_hand_dist + fist_offset), player.facing_dir - PI / 2, 0.075)), this.scale * 0.125 * player_scale, 0, Math.PI * 2, false);
             this.ctx.closePath();
             this.ctx.stroke();
             this.ctx.fill();

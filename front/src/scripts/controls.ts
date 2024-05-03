@@ -36,6 +36,31 @@ const bindings: Binding[] = [
         id: "crouch",
         keys: new Set(["ShiftLeft", "ShiftRight"]),
         mouse_btns: new Set([])
+    },
+    {
+        id: "inv_left",
+        keys: new Set(["KeyQ"]),
+        mouse_btns: new Set([])
+    },
+    {
+        id: "inv_right",
+        keys: new Set(["KeyE"]),
+        mouse_btns: new Set([])
+    },
+    {
+        id: "inv_left_skip_fist",
+        keys: new Set([]),
+        mouse_btns: new Set([])
+    },
+    {
+        id: "inv_right_skip_fist",
+        keys: new Set([]),
+        mouse_btns: new Set([])
+    },
+    {
+        id: "inv_fist",
+        keys: new Set([]),
+        mouse_btns: new Set([])
     }
 ];
 

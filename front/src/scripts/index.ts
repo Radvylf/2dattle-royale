@@ -8,6 +8,7 @@ import { Rock } from "./objects/rock";
 import { DeciduousTree } from "./objects/deciduous_tree";
 import { ConiferousTree } from "./objects/coniferous_tree";
 import { BasicAssaultRifle } from "./items/basic_assault_rifle";
+import { BasicPistol } from "./items/basic_pistol";
 
 const canvas = document.getElementById("display");
 
@@ -27,7 +28,8 @@ const display = new Display(canvas! as HTMLCanvasElement, dims, player, tick_loo
 
 tick_loop.attatch_player(player);
 
-player.holding_item = new BasicAssaultRifle(tick_loop);
+player.inventory.push(new BasicPistol(tick_loop));
+player.holding_item_index = 0;
 
 tick_loop.objects.insert_object(new Crate(-2, -4));
 tick_loop.objects.insert_object(new Crate(-4.5, -3));

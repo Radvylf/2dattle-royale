@@ -9,7 +9,9 @@ import { AbstractGun } from "./items/abstract_gun";
 export const SPD = 10;
 export const DSPD = 10;
 
-export class Player {
+export const FIST_COOLDOWN = 100;
+
+export abstract class Player {
     x: number;
     y: number;
     dx: number;
@@ -18,7 +20,6 @@ export class Player {
 
     crouching: boolean;
 
-    holding_item: Item | null;
     active_hand: number;
     use_anim_start: number | null;
 
@@ -31,21 +32,24 @@ export class Player {
 
         this.crouching = false;
 
-        this.holding_item = null; // todo
         this.active_hand = 0; // todo
         this.use_anim_start = null;
     }
 
+    abstract holding_item(): Item | null;
+
     fist_offset() {
-        if (this.holding_item == null) {
+        const holding_item = this.holding_item();
+
+        if (holding_item == null) {
             return this.use_anim_start == null || Date.now() - this.use_anim_start >= display.PUNCH_TIME + display.PUNCH_PULLBACK_TIME ? 0 : (
                 Date.now() - this.use_anim_start < display.PUNCH_TIME ? (Date.now() - this.use_anim_start) / display.PUNCH_TIME : 1 - (Date.now() - this.use_anim_start - display.PUNCH_TIME) / display.PUNCH_PULLBACK_TIME
             ) * display.PUNCH_DIST;
-        } else if (this.holding_item.holding_style == HoldingStyle.PISTOL) {
+        } else if (holding_item.holding_style == HoldingStyle.PISTOL) {
             return this.use_anim_start == null || Date.now() - this.use_anim_start >= display.RECOIL_TIME + display.RECOIL_FORWARD_TIME ? 0 : (
                 Date.now() - this.use_anim_start < display.RECOIL_TIME ? (Date.now() - this.use_anim_start) / display.RECOIL_TIME : 1 - (Date.now() - this.use_anim_start - display.RECOIL_TIME) / display.RECOIL_FORWARD_TIME
             ) * -display.RECOIL_DIST;
-        } else if (this.holding_item.holding_style == HoldingStyle.RIFLE) {
+        } else if (holding_item.holding_style == HoldingStyle.RIFLE) {
             return this.use_anim_start == null || Date.now() - this.use_anim_start >= display.RECOIL_TIME + display.RECOIL_FORWARD_TIME ? 0 : (
                 Date.now() - this.use_anim_start < display.RECOIL_TIME ? (Date.now() - this.use_anim_start) / display.RECOIL_TIME : 1 - (Date.now() - this.use_anim_start - display.RECOIL_TIME) / display.RECOIL_FORWARD_TIME
             ) * -display.RECOIL_DIST * 1.5;
@@ -55,8 +59,17 @@ export class Player {
     }
 }
 
+class MockPlayer extends Player {
+    holding_item(): Item | null {
+        return null;
+    }
+}
+
 export class FpPlayer extends Player {
     id: number;
+
+    inventory: Item[];
+    holding_item_index: number | null;
 
     cooldown: number;
     burst_count: number;
@@ -70,6 +83,9 @@ export class FpPlayer extends Player {
 
         this.id = id;
 
+        this.inventory = [];
+        this.holding_item_index = null;
+
         this.cooldown = 0;
         this.burst_count = 0;
 
@@ -81,8 +97,89 @@ export class FpPlayer extends Player {
         controls.on("mouse_offset_update", this.mouse_offset_update.bind(this));
 
         controls.on("bind_down", (bind) => {
-            if (bind == "use") {
-                this.use();
+            let swapped_item = false;
+
+            switch (bind) {
+                case "use":
+                    this.use();
+
+                    break;
+                case "inv_left":
+                    if (this.holding_item_index == null) {
+                        swapped_item = (this.inventory.length != 0);
+
+                        this.holding_item_index = this.inventory.length == 0 ? null : this.inventory.length - 1;
+                    } else if (this.holding_item_index == 0) {
+                        swapped_item = true;
+
+                        this.holding_item_index = null;
+                    } else {
+                        swapped_item = true;
+
+                        this.holding_item_index--;
+                    }
+
+                    break;
+                case "inv_right":
+                    if (this.holding_item_index == null) {
+                        swapped_item = (this.inventory.length != 0);
+
+                        this.holding_item_index = this.inventory.length == 0 ? null : 0;
+                    } else if (this.holding_item_index == this.inventory.length - 1) {
+                        swapped_item = true;
+
+                        this.holding_item_index = null;
+                    } else {
+                        swapped_item = true;
+
+                        this.holding_item_index++;
+                    }
+
+                    break;
+                case "inv_left_skip_fist":
+                    if (this.holding_item_index == null) {
+                        swapped_item = (this.inventory.length != 0);
+
+                        this.holding_item_index = this.inventory.length == 0 ? null : this.inventory.length - 1;
+                    } else if (this.holding_item_index == 0) {
+                        swapped_item = (this.inventory.length != 1);
+
+                        this.holding_item_index = this.inventory.length - 1;
+                    } else {
+                        swapped_item = true;
+
+                        this.holding_item_index--;
+                    }
+
+                    break;
+                case "inv_right_skip_fist":
+                    if (this.holding_item_index == null) {
+                        swapped_item = (this.inventory.length != 0);
+
+                        this.holding_item_index = this.inventory.length == 0 ? null : 0;
+                    } else if (this.holding_item_index == this.inventory.length - 1) {
+                        swapped_item = (this.inventory.length != 1);
+
+                        this.holding_item_index = 0;
+                    } else {
+                        swapped_item = true;
+
+                        this.holding_item_index++;
+                    }
+
+                    break;
+                case "inv_fist":
+                    swapped_item = (this.holding_item_index != null);
+
+                    this.holding_item_index = null;
+
+                    break;
+            }
+
+            if (swapped_item) {
+                this.use_anim_start = null;
+
+                this.cooldown = Date.now() + (this.holding_item_index == null ? FIST_COOLDOWN : this.inventory[this.holding_item_index].swap_cooldown());
             }
         });
 
@@ -93,6 +190,10 @@ export class FpPlayer extends Player {
         });
 
         window.setInterval(this.send_position_update.bind(this), 100);
+    }
+
+    holding_item(): Item | null {
+        return this.holding_item_index == null ? this.holding_item_index : this.inventory[this.holding_item_index];
     }
 
     mouse_offset_update() {
@@ -147,7 +248,7 @@ export class FpPlayer extends Player {
                 this.x += tick_mov_x;
                 this.y += tick_mov_y;
             } else {
-                const first_mov_player = new Player(this.x + Math.cos(tick_mov_dir) * min_collision.dist, this.y + Math.sin(tick_mov_dir) * min_collision.dist, 0);
+                const first_mov_player = new MockPlayer(this.x + Math.cos(tick_mov_dir) * min_collision.dist, this.y + Math.sin(tick_mov_dir) * min_collision.dist, 0);
 
                 let dfc_dist = (tick_mov_dist - min_collision.dist) * min_collision.dfc_dist_multiplier;
 
@@ -170,20 +271,31 @@ export class FpPlayer extends Player {
 
         this.crouching = this.controls.is_bind_down("crouch");
 
-        if (this.controls.is_bind_down("use") && this.holding_item != null && this.holding_item instanceof AbstractGun && Date.now() >= this.cooldown && this.burst_count < this.holding_item.stats.burst) this.holding_item.use(this);
+        const holding_item = this.holding_item();
+
+        if (this.controls.is_bind_down("use") && holding_item != null && holding_item instanceof AbstractGun && Date.now() >= this.cooldown && this.burst_count < holding_item.stats.burst) holding_item.use(this);
     }
 
     use() {
-        if (this.holding_item == null) {
+        const holding_item = this.holding_item();
+
+        if (holding_item == null) {
             this.punch();
         } else {
-            this.holding_item.use(this);
+            holding_item.use(this);
         }
     }
 
     punch() {
+        if (Date.now() < this.cooldown) {
+            return;
+        }
+
         this.active_hand = 1 - this.active_hand;
         this.use_anim_start = Date.now();
+
+        this.cooldown = Date.now() + FIST_COOLDOWN;
+        this.burst_count++;
 
         // todo: damage
     }

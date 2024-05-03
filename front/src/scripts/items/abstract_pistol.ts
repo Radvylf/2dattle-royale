@@ -15,8 +15,10 @@ export abstract class AbstractPistol extends AbstractGun {
 
     abstract draw(display: Display, x: number, y: number, pointing_dir: number, shoot_anim_start: number): void;
 
-    use(player: FpPlayer): void {
-        super.use(player);
+    use(player: FpPlayer): boolean {
+        if (!super.use(player)) {
+            return false;
+        }
 
         const cos = Math.cos(player.facing_dir);
         const sin = Math.sin(player.facing_dir);
@@ -36,5 +38,7 @@ export abstract class AbstractPistol extends AbstractGun {
             this.stats.max_dist,
             this.stats.damage
         ));
+
+        return true;
     }
 }

@@ -48,7 +48,7 @@ export function circle_circle_collision(x1: number, y1: number, r1: number, x2: 
         dist: close_collision,
         dfc_dir,
         dfc_dist_multiplier: dx * Math.cos(dfc_dir) + dy * Math.sin(dfc_dir)
-    }; // todo
+    };
 }
 
 export function circle_line_collision(x1: number, y1: number, r1: number, x2: number, y2: number, theta: number, dx: number, dy: number): [number | null, Collision] {

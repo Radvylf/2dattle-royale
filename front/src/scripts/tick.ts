@@ -2,9 +2,12 @@ import { Player, FpPlayer } from "./player";
 import { Projectile } from "./projectile";
 import { MapObjectTracker } from "./object";
 import { Ws } from "./ws";
+import { Item } from "./item";
 
 class OtherPlayer extends Player {
-
+    holding_item(): Item | null {
+        return null;
+    }
 }
 
 export class TickLoop {

@@ -29,7 +29,7 @@ const display = new Display(canvas! as HTMLCanvasElement, dims, player, tick_loo
 tick_loop.attatch_player(player);
 
 player.inventory.push(new BasicPistol(tick_loop));
-player.holding_item_index = 0;
+player.inventory.push(new BasicAssaultRifle(tick_loop));
 
 tick_loop.objects.insert_object(new Crate(-2, -4));
 tick_loop.objects.insert_object(new Crate(-4.5, -3));

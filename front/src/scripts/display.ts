@@ -184,7 +184,7 @@ export class Display {
             this.ctx.stroke();
             this.ctx.fill();
         } else if (holding_item.holding_style == HoldingStyle.PISTOL) {
-            const HAND_DIST = PI / 8;
+            const HAND_DIST = PI / 16;
 
             this.ctx.fillStyle = SKIN_COLOR;
             this.ctx.strokeStyle = SKIN_BORDER_COLOR;

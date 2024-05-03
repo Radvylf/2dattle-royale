@@ -245,8 +245,6 @@ export class Controls extends EventEmitter {
         });
 
         window.addEventListener("blur", () => {
-            console.log("blur");
-
             this.keys_down.clear();
             this.mouse_btns_down.clear();
 

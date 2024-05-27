@@ -20,6 +20,8 @@ export class Projectile {
 
     constructor(tick_loop: TickLoop, x: number, y: number, dx: number, dy: number, size: number, max_dist: number, damage: number) {
         this.tick_loop = tick_loop;
+        
+        // todo: check if bullet is inside object
 
         this.x = x;
         this.y = y;

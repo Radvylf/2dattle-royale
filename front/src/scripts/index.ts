@@ -9,6 +9,7 @@ import { DeciduousTree } from "./objects/deciduous_tree";
 import { ConiferousTree } from "./objects/coniferous_tree";
 import { BasicAssaultRifle } from "./items/basic_assault_rifle";
 import { BasicPistol } from "./items/basic_pistol";
+import { BasicSniperRifle } from "./items/basic_sniper_rifle";
 
 const canvas = document.getElementById("display");
 
@@ -30,6 +31,7 @@ tick_loop.attatch_player(player);
 
 player.inventory.push(new BasicPistol(tick_loop));
 player.inventory.push(new BasicAssaultRifle(tick_loop));
+player.inventory.push(new BasicSniperRifle(tick_loop));
 
 tick_loop.objects.insert_object(new Crate(-2, -4));
 tick_loop.objects.insert_object(new Crate(-4.5, -3));

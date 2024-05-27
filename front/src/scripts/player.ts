@@ -18,6 +18,8 @@ export abstract class Player {
     dy: number;
     facing_dir: number;
 
+    hp: number;
+
     crouching: boolean;
 
     active_hand: number;
@@ -29,6 +31,8 @@ export abstract class Player {
         this.dx = 0;
         this.dy = 0;
         this.facing_dir = facing_dir;
+
+        this.hp = 100; // todo
 
         this.crouching = false;
 
